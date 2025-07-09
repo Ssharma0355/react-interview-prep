@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import FormTab from './tabFormComponent/FormTab';
 import Posts from './GraphQL/Posts';
+import TabsForms from './3Forms/TabsForms';
 
 
 function App() {
@@ -12,8 +13,9 @@ function App() {
      {/* <FormTab /> */}
 
 
-     <h1>GraphQL Integration</h1>
-     <Posts />
+     {/* <h1>GraphQL Integration</h1>
+     <Posts /> */}
+     <TabsForms />
 
 
 
