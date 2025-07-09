@@ -1,59 +1,128 @@
 import React, { useState } from "react";
 
 const FormTab = () => {
-    const [tab1, setTab1] = useState(true);
-    const [tab2, setTab2] = useState(false);
-    const [tab3, setTab3] = useState(false);
-    const [info,setInfo] = useState({name:"",age:"", email:"", job:""})
-    const handleForm1 =()=>{
-        setTab1(true);
-        setTab2(false)
-        setTab3(false)
+    const [activeTab, setActiveTab] = useState(1); // Simplified tab state
+    const [info, setInfo] = useState({
+        personal: { name: "", age: "", email: "", job: "" },
+        hobbies: { interests: [], favoriteSport: "" },
+        settings: { notifications: true, theme: "light" }
+    });
 
-    }
-    const handleForm2 = () => {
-        setTab1(false);
-        setTab2(true)
-        setTab3(false)
-    }
-    const handleForm3 = () => {
-        setTab1(false);
-        setTab2(false)
-        setTab3(true)
-    }
-  return (
-    <div>
-      <div className="tab-btn">
-        <button onClick={handleForm1}>Personal Info</button>
-              <button onClick={handleForm2}>Hobbies</button>
-              <button onClick={handleForm3}>settings</button>
-      </div>
-          {tab1 === true && (
+    const handleTabChange = (tabNumber) => {
+        setActiveTab(tabNumber);
+    };
+
+    const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        const [section, field] = name.split('.'); // Split name into section and field
+
+        setInfo(prevData => ({
+            ...prevData,
+            [section]: {
+                ...prevData[section],
+                [field]: type === 'checkbox' ? checked : value
+            }
+        }));
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log("Form submitted:", info);
+        // Here you would typically send data to an API
+    };
+
+    const goToNextTab = () => {
+        if (activeTab < 3) setActiveTab(activeTab + 1);
+    };
+
+    const goToPrevTab = () => {
+        if (activeTab > 1) setActiveTab(activeTab - 1);
+    };
+
+    return (
         <div>
-            <input type="text" value={info.name} onChange={(e)=>setInfo(e.target.value)} />
-                  <input type="text" value={info.age} onChange={(e) => setInfo(e.target.value)} />
-                  <input type="text" value={info.email} onChange={(e) => setInfo(e.target.value)} />
-                  <input type="text" value={info.job} onChange={(e) => setInfo(e.target.value)} />
-                  <button>Next</button>
+            <div className="tab-btn">
+                <button onClick={() => handleTabChange(1)}>Personal Info</button>
+                <button onClick={() => handleTabChange(2)}>Hobbies</button>
+                <button onClick={() => handleTabChange(3)}>Settings</button>
+            </div>
+
+            <form onSubmit={handleSubmit}>
+                {activeTab === 1 && (
+                    <div>
+                        <input
+                            type="text"
+                            name="personal.name"
+                            value={info.personal.name}
+                            onChange={handleChange}
+                            placeholder="Name"
+                        />
+                        <input
+                            type="number"
+                            name="personal.age"
+                            value={info.personal.age}
+                            onChange={handleChange}
+                            placeholder="Age"
+                        />
+                        <input
+                            type="email"
+                            name="personal.email"
+                            value={info.personal.email}
+                            onChange={handleChange}
+                            placeholder="Email"
+                        />
+                        <input
+                            type="text"
+                            name="personal.job"
+                            value={info.personal.job}
+                            onChange={handleChange}
+                            placeholder="Job"
+                        />
+                        <button type="button" onClick={goToNextTab}>Next</button>
+                    </div>
+                )}
+
+                {activeTab === 2 && (
+                    <div>
+                        <input
+                            type="text"
+                            name="hobbies.favoriteSport"
+                            value={info.hobbies.favoriteSport}
+                            onChange={handleChange}
+                            placeholder="Favorite Sport"
+                        />
+                        {/* Add more hobby fields as needed */}
+                        <button type="button" onClick={goToPrevTab}>Previous</button>
+                        <button type="button" onClick={goToNextTab}>Next</button>
+                    </div>
+                )}
+
+                {activeTab === 3 && (
+                    <div>
+                        <label>
+                            <input
+                                type="checkbox"
+                                name="settings.notifications"
+                                checked={info.settings.notifications}
+                                onChange={handleChange}
+                            />
+                            Enable Notifications
+                        </label>
+                        <select
+                            name="settings.theme"
+                            value={info.settings.theme}
+                            onChange={handleChange}
+                        >
+                            <option value="light">Light Theme</option>
+                            <option value="dark">Dark Theme</option>
+                        </select>
+                        <button type="button" onClick={goToPrevTab}>Previous</button>
+                        <button type="submit">Submit</button>
+                    </div>
+                )}
+            </form>
         </div>
-      )}
-          {tab2 === true && (
-              <div>
-
-<button>Previos</button>
-<button>Next</button>
-              </div>
-              
-          )}
-          {tab3 === true && (
-              <div>
-                  <button>Previos</button>
-                  <button>Submit</button>
-
-              </div>
-          )}
-    </div>
-  );
+    );
 };
 
 export default FormTab;
