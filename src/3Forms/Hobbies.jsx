@@ -4,6 +4,7 @@ const Hobbies = () => {
   return (
     <div>
       <h1>Hobboes</h1>
+      <input type="checkbox" name="theme" id="" />
     </div>
   )
 }
